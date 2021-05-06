@@ -14,7 +14,7 @@
         <div v-if="!todoList||todoList.length<=0" class="empty">还没有待办的事项</div>
         <div v-if="inputActive" class="insert-wrap">
           <div
-            ref="insert-input"
+            ref="todo-input"
             contenteditable="true"
             class="textarea"
             @focus="inputActive = true"
@@ -32,11 +32,21 @@
           <i class="iconfont icon-wancheng1" @click="handleDone(item.id, item.isComplete)" />
           <span>{{ item.content }}</span>
           <div class="btn-box" style="z-index: -1">
-            <div class="edit"><i class="iconfont icon-edit" /></div>
-            <div class="delete"><i class="iconfont icon-delete" /></div>
+            <div class="edit" @click="handleEdit(item.id, item.content)"><i class="iconfont icon-edit" /></div>
+            <div class="delete" @click="handleDelete(item.id)"><i class="iconfont icon-delete" /></div>
           </div>
         </div>
         <div v-if="!doneList||doneList.length<=0" class="empty">还没有已完成的事项</div>
+        <div v-if="inputActive" class="insert-wrap">
+          <div
+            ref="done-input"
+            contenteditable="true"
+            class="textarea"
+            @focus="inputActive = true"
+          />
+          <div v-if="updateId" class="save-btn" @click="handleUpdate">保存</div>
+          <div v-else class="save-btn" @click="handleSave">保存</div>
+        </div>
       </section>
     </transition>
     <div v-if="inputActive" class="mask" @click="inputActive = false" />
@@ -130,8 +140,9 @@ export default {
       this.inputActive = true
       this.updateId = id
       setTimeout(() => {
-        this.$refs['insert-input'].innerText = content
-        this.$refs['insert-input'].focus()
+        const input = this.status === '1' ? this.$refs['todo-input'] : this.$refs['done-input']
+        input.innerText = content
+        input.focus()
       }, 20)
     },
     // 删除
@@ -199,18 +210,19 @@ export default {
     // 保存
     handleSave() {
       // 获取输入内容
-      const content = this.$refs['insert-input'].innerText
+      const content = this.$refs['todo-input'].innerText
       if (content == null || content.trim() === '') {
         return
       }
       this.insertTodo(content)
       // 清空输入框
-      this.$refs['insert-input'].innerHTML = ''
+      this.$refs['todo-input'].innerHTML = ''
       this.inputActive = false
     },
     // 更新
     handleUpdate() {
-      const content = this.$refs['insert-input'].innerText
+      const input = this.status === '1' ? this.$refs['todo-input'] : this.$refs['done-input']
+      const content = input.innerText
       if (content == null || content.trim() === '') {
         return
       }
@@ -229,7 +241,7 @@ export default {
       this.inputActive = true
       this.updateId = ''
       setTimeout(() => {
-        this.$refs['insert-input'].focus()
+        this.$refs['todo-input'].focus()
       }, 20)
     },
     // 去详情页
@@ -329,7 +341,8 @@ export default {
         }
       }
     }
-    &.todo {
+    &.todo,
+    &.done{
       .insert-wrap{
         position: fixed;
         z-index: 999;
@@ -372,6 +385,8 @@ export default {
           }
         }
       }
+    }
+    &.todo {
       .insert-btn{
         position: fixed;
         right: 25px;
