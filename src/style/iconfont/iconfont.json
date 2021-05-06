@@ -1,0 +1,37 @@
+{
+  "id": "2521923",
+  "name": "todo-list",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "7534258",
+      "name": "完成",
+      "font_class": "wancheng1",
+      "unicode": "e782",
+      "unicode_decimal": 59266
+    },
+    {
+      "icon_id": "10048847",
+      "name": "圆形",
+      "font_class": "yuanxing",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
+      "icon_id": "1177004",
+      "name": "todo",
+      "font_class": "todo",
+      "unicode": "e74b",
+      "unicode_decimal": 59211
+    },
+    {
+      "icon_id": "6500407",
+      "name": "done",
+      "font_class": "done",
+      "unicode": "e66f",
+      "unicode_decimal": 58991
+    }
+  ]
+}
