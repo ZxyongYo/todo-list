@@ -1,4 +1,5 @@
 module.exports = {
+	publicPath: '/todo-list',
   css: {
     loaderOptions: {
       // 给 sass-loader 传递选项
