@@ -61,7 +61,7 @@ export default {
   data() {
     return {
       inputActive: false, // 输入框是否激活
-      todoList: null, // 代办事项
+      todoList: [{ id: 1, content: 'asdfasd' }], // 代办事项
       doneList: null, // 已完成事项
       updateId: '' // 要更新的id
     }
@@ -83,58 +83,6 @@ export default {
     })
   },
   methods: {
-    // 滑动
-    handleSlide() {
-      const el = this.status === '1' ? this.$refs['slide-todo-wrap'] : this.$refs['slide-done-wrap']
-      let startX // 按下时的 pageX
-      let currentX = 0 // 按时时的偏移量
-      let diffX // 移动的距离
-      // 按下
-      el.addEventListener('touchstart', function(e) {
-        const target = e.target.parentNode // 要移动的目标
-        const slideItems = target.parentNode.querySelectorAll('.slide-item') // 所有能移动的元素
-        // 遍历兄弟节点 全关闭
-        slideItems.forEach(item => {
-          if (item === target) return
-          item.style.transform = 'translateX(0px)'
-        })
-        // 判断是不是目标元素
-        if (target.className.indexOf('slide-item') === -1) return
-        currentX = parseInt(target.style.transform.split('(')[1]) | 0
-        target.style.transition = ''
-        startX = e.changedTouches[0].pageX
-      })
-      // 按下 移动
-      el.addEventListener('touchmove', function(e) {
-        const target = e.target.parentNode
-        // 判断是不是目标元素
-        if (target.className.indexOf('slide-item') === -1) return
-        diffX = startX - e.changedTouches[0].pageX // 移动的距离
-        if (currentX) { // 如果已经打开了
-          const moveX = currentX - diffX >= 0 ? 0 : currentX - diffX
-          if (moveX < -120) return
-          target.style.transform = `translateX(${moveX}px)`
-        } else {
-          const moveX = -diffX < -120 ? -120 : -diffX
-          if (moveX > 0) return
-          target.style.transform = `translateX(${moveX}px)`
-        }
-      })
-      // 抬起
-      el.addEventListener('touchend', function(e) {
-        const target = e.target.parentNode
-        // 判断是不是目标元素
-        if (target.className.indexOf('slide-item') === -1) return
-        // 移动距离超过60 直接打开
-        if (diffX > 60) {
-          target.style.transition = 'transform .3s'
-          target.style.transform = 'translateX(-120px)'
-        } else { // 移动距离小于60 自动合上
-          target.style.transition = 'transform .3s'
-          target.style.transform = 'translateX(0)'
-        }
-      })
-    },
     // 编辑
     handleEdit(id, content) {
       this.inputActive = true
@@ -249,6 +197,59 @@ export default {
       this.$router.push({
         path: '/detail',
         query: { id, content }
+      })
+    },
+
+    // 滑动
+    handleSlide() {
+      const el = this.status === '1' ? this.$refs['slide-todo-wrap'] : this.$refs['slide-done-wrap']
+      let startX // 按下时的 pageX
+      let currentX = 0 // 按时时的偏移量
+      let diffX // 移动的距离
+      // 按下
+      el.addEventListener('touchstart', function(e) {
+        const target = e.target.parentNode // 要移动的目标
+        const slideItems = target.parentNode.querySelectorAll('.slide-item') // 所有能移动的元素
+        // 遍历兄弟节点 全关闭
+        slideItems.forEach(item => {
+          if (item === target) return
+          item.style.transform = 'translateX(0px)'
+        })
+        // 判断是不是目标元素
+        if (target.className.indexOf('slide-item') === -1) return
+        currentX = parseInt(target.style.transform.split('(')[1]) | 0
+        target.style.transition = ''
+        startX = e.changedTouches[0].pageX
+      })
+      // 按下 移动
+      el.addEventListener('touchmove', function(e) {
+        const target = e.target.parentNode
+        // 判断是不是目标元素
+        if (target.className.indexOf('slide-item') === -1) return
+        diffX = startX - e.changedTouches[0].pageX // 移动的距离
+        if (currentX) { // 如果已经打开了
+          const moveX = currentX - diffX >= 0 ? 0 : currentX - diffX
+          if (moveX < -120) return
+          target.style.transform = `translateX(${moveX}px)`
+        } else {
+          const moveX = -diffX < -120 ? -120 : -diffX
+          if (moveX > 0) return
+          target.style.transform = `translateX(${moveX}px)`
+        }
+      })
+      // 抬起
+      el.addEventListener('touchend', function(e) {
+        const target = e.target.parentNode
+        // 判断是不是目标元素
+        if (target.className.indexOf('slide-item') === -1) return
+        // 移动距离超过60 直接打开
+        if (diffX > 60) {
+          target.style.transition = 'transform .3s'
+          target.style.transform = 'translateX(-120px)'
+        } else { // 移动距离小于60 自动合上
+          target.style.transition = 'transform .3s'
+          target.style.transform = 'translateX(0)'
+        }
       })
     }
   }
